@@ -73,6 +73,21 @@ export type commentTypeOutput = {
     createdAt:	string
 }
 
+export type userDeviceDBType = {
+    _id: ObjectId,
+    userID: ObjectId,
+    ip: string,
+    title: string,
+    lastActiveDate: string,
+}
+
+export type userDeviceOutputType = {
+    ip: string,
+    title: string | unknown | null,
+    lastActiveDate: string,
+    deviceId: string
+}
+
 export type RequestWithBody<B> = Request<{},{}, B>
 export type RequestWithQuery<Q> = Request<{},{},{}, Q>
 export type RequestWithParams<P> = Request<P>

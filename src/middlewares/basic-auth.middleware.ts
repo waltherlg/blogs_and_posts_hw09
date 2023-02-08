@@ -50,13 +50,13 @@ export const refreshTokenCheck = async (req: Request, res: Response, next: NextF
         res.status(401).send("нет куки")
         return
     }
-    const isTokenExpired = await authService.isTokenExpired(refreshToken)
-    console.log(isTokenExpired)
-    if (isTokenExpired) {
-        // res.sendStatus(401)
-        res.status(401).send("токен сдох")
-        return
-    }
+    // const isTokenExpired = await authService.isTokenExpired(refreshToken)
+    // console.log(isTokenExpired)
+    // if (isTokenExpired) {
+    //     // res.sendStatus(401)
+    //     res.status(401).send("токен сдох")
+    //     return
+    // }
 
     const user = await usersService.getUserById(userId)
     if (!user) return res.status(401).send('no user')

@@ -13,6 +13,9 @@ import {
 } from "../middlewares/input-validation-middleware/input-validation-middleware";
 import {authService} from "../domain/auth-service";
 import {tr} from "date-fns/locale";
+import {securityService} from "../domain/security-service";
+import jwt from "jsonwebtoken";
+import {ObjectId} from "mongodb";
 
 
 export const authRouter = Router({})
@@ -61,8 +64,7 @@ authRouter.post('/login',
     async (req: RequestWithBody<userAuthModel>, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {
-            const accessToken = await jwtService.createJWT(user)
-            const refreshToken = await jwtService.createJWTRefresh(user)
+            const {accessToken, refreshToken} = await authService.login(user, req.ip, req.headers['user-agent']!)
             res.status(200).cookie("refreshToken", refreshToken, {httpOnly: true, secure: true}).send({accessToken})
         } else res.sendStatus(401)
     })

@@ -10,8 +10,8 @@ export const jwtService = {
         return token
     },
 
-    async createJWTRefresh(user: userType)  {
-    const newRefreshedToken = jwt.sign({userId: user._id}, settings.JWT_SECRET, {expiresIn: '20s'})
+    async createJWTRefresh(user: userType, deviceId: ObjectId)  {
+    const newRefreshedToken = jwt.sign({userId: user._id, deviceId}, settings.JWT_SECRET, {expiresIn: '20s'})
     return newRefreshedToken
     },
 
@@ -37,7 +37,10 @@ export const jwtService = {
         return
     },
 
-
+    async getLastActiveDateFromRefreshToken (refreshToken: string): Promise<string>{
+        const payload: any = jwt.decode(refreshToken)
+        return new Date(payload.iat * 1000).toISOString()
+    }
 
 
 }

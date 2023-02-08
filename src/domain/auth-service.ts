@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {userType, userTypeOutput} from "../models/types";
+import {userDeviceDBType, userType, userTypeOutput} from "../models/types";
 import {usersRepository} from "../repositories/users-repository";
 import {expiredTokenRepository} from "../repositories/tokensRepository";
 import * as bcrypt from 'bcrypt'
@@ -8,6 +8,9 @@ import add from 'date-fns/add'
 import {emailManager} from "../managers/email-manager";
 import {usersService} from "./users-service";
 import {confirmationCodeValidation} from "../middlewares/input-validation-middleware/input-validation-middleware";
+import {jwtService} from "../application/jwt-service";
+import {securityService} from "./security-service";
+import {userDeviceRepo} from "../repositories/users-device-repository";
 
 export const authService = {
 
@@ -85,6 +88,22 @@ export const authService = {
     async isTokenExpired(refreshToken: string){
         const isToken = await expiredTokenRepository.findExpiredToken(refreshToken)
         return !!isToken
+    },
+
+    async login(user: userType, ip: string, userAgent: string) {
+        const deviceId = new ObjectId()
+        const accessToken = await jwtService.createJWT(user)
+        const refreshToken = await jwtService.createJWTRefresh(user, deviceId)
+        const lastActiveDate = await jwtService.getLastActiveDateFromRefreshToken(refreshToken)
+        const deviceInfo: userDeviceDBType = {
+            _id: deviceId,
+            userID: user._id,
+            ip,
+            title: userAgent,
+            lastActiveDate
+        }
+        await userDeviceRepo.addDeviceInfo(deviceInfo)
+        return { accessToken, refreshToken }
     }
 }
 

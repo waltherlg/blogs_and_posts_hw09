@@ -9,6 +9,8 @@ import {runDb} from "./repositories/db";
 import {authRouter} from "./routes/auth-route";
 import {commentsRouter} from "./routes/comments-route";
 import cookieParser from 'cookie-parser'
+import {authRateLimiter} from "./middlewares/rate-limiter";
+import {securityRouter} from "./routes/security-route";
 
 const bodyParser = require('body-parser');
 
@@ -23,9 +25,9 @@ app.use('/testing', testingRouter)
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
-app.use('/auth', authRouter)
+app.use('/auth', authRateLimiter(), authRouter)
 app.use('/comments', commentsRouter)
-
+app.use('/security', securityRouter)
 
 const startApp = async () => {
     await runDb()

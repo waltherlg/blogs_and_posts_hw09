@@ -50,3 +50,5 @@ yarn add @types/uuid -D
 yarn add date-fns
 
 yarn add cookie-parser
+
+yarn add express-rate-limit
