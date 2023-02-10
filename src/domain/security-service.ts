@@ -29,7 +29,4 @@ export const securityService = {
     async deleteAllDevices(): Promise<boolean>{
         return await userDeviceRepo.deleteAllDevices()
     }
-
-
-
 }

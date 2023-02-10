@@ -50,6 +50,11 @@ export const jwtService = {
     async getLastActiveDateFromRefreshToken (refreshToken: string): Promise<string>{
         const payload: any = jwt.decode(refreshToken)
         return new Date(payload.iat * 1000).toISOString()
+    },
+
+    async getExpirationDateFromRefreshToken (refreshToken: string): Promise<string>{
+        const payload: any = jwt.decode(refreshToken)
+        return new Date(payload.exp * 1000).toISOString()
     }
 
 

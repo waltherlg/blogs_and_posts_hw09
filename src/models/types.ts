@@ -81,6 +81,7 @@ export type userDeviceDBType = {
     ip: string,
     title: string,
     lastActiveDate: string,
+    expirationDate:string
 }
 
 export type userDeviceOutputType = {

@@ -95,12 +95,14 @@ export const authService = {
         const accessToken = await jwtService.createJWT(user)
         const refreshToken = await jwtService.createJWTRefresh(user, deviceId)
         const lastActiveDate = await jwtService.getLastActiveDateFromRefreshToken(refreshToken)
+        const expirationDate = await jwtService.getExpirationDateFromRefreshToken(refreshToken)
         const deviceInfo: userDeviceDBType = {
             _id: deviceId,
             userId: user._id,
             ip,
             title: userAgent,
-            lastActiveDate
+            lastActiveDate,
+            expirationDate
         }
         await userDeviceRepo.addDeviceInfo(deviceInfo)
         return { accessToken, refreshToken }
