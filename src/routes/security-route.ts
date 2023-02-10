@@ -16,15 +16,7 @@ securityRouter.get('/devices',
 securityRouter.delete('/devices',
     refreshTokenCheck,
     async (req: Request, res: Response) => {
-        const isAllUsersDevisesDeleted = await securityService.deleteAllActiveUserDevices(req.user!._id)
-        if (isAllUsersDevisesDeleted) return res.sendStatus(204)
-        else res.sendStatus(404)
-    })
-
-securityRouter.delete('/devices',
-    refreshTokenCheck,
-    async (req: Request, res: Response) => {
-        const isAllUsersDevisesDeleted = await securityService.deleteAllActiveUserDevices(req.user!._id)
+        const isAllUsersDevisesDeleted = await securityService.deleteAllUserDevicesExceptCurrent(req.user!._id, req.cookies!.refreshToken)
         if (isAllUsersDevisesDeleted) return res.sendStatus(204)
         else res.sendStatus(404)
     })
@@ -39,3 +31,4 @@ securityRouter.delete('/devices/:deviceId',
             res.sendStatus(404)
         }
     })
+

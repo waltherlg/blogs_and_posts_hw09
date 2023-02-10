@@ -21,9 +21,13 @@ export const userDeviceRepo = {
         }))
     },
 
-    async deleteAllActiveUserDevices(userId: ObjectId): Promise<boolean>{
-        const result = await userDeviceCollection.deleteMany({"userId": userId})
-        return result.acknowledged
+    async deleteAllUserDevicesExceptCurrent(userId: ObjectId, deviceId: string): Promise<boolean>{
+        if (ObjectId.isValid(deviceId)){
+            let _id = new ObjectId(deviceId)
+            const result = await userDeviceCollection.deleteMany({$and: [{"userId": userId}, {"_id": {$ne: _id}}]})
+            return result.acknowledged
+        }
+        else return false
     },
 
     async deleteUserDeviceById(userId: ObjectId, deviceId: string): Promise<boolean>{

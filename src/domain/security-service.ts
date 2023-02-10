@@ -1,6 +1,7 @@
 import {ObjectId} from "mongodb";
 import {userDeviceRepo} from "../repositories/users-device-repository";
 import {userDeviceOutputType} from "../models/types";
+import {jwtService} from "../application/jwt-service";
 
 export const securityService = {
 
@@ -9,8 +10,9 @@ export const securityService = {
         return foundDevices
     },
 
-    async deleteAllActiveUserDevices(userId: ObjectId){
-        let isDevicesDeleted = await userDeviceRepo.deleteAllActiveUserDevices(userId)
+    async deleteAllUserDevicesExceptCurrent(userId: ObjectId, refreshToken: string){
+        const deviceId = await jwtService.getDeviceIdFromRefreshToken(refreshToken)
+        let isDevicesDeleted = await userDeviceRepo.deleteAllUserDevicesExceptCurrent(userId, deviceId)
         return isDevicesDeleted
     },
 
