@@ -22,7 +22,8 @@ export const blogsRepository = {
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt
+            createdAt: blog.createdAt,
+            isMembership: blog.isMembership
         }
     },
 
@@ -33,7 +34,8 @@ export const blogsRepository = {
             name: blogs.name,
             description: blogs.description,
             websiteUrl: blogs.websiteUrl,
-            createdAt: blogs.createdAt
+            createdAt: blogs.createdAt,
+            isMembership: blogs.isMembership
         }))
     },
 
@@ -44,7 +46,8 @@ export const blogsRepository = {
             name: newBlog.name,
             description: newBlog.description,
             websiteUrl: newBlog.websiteUrl,
-            createdAt: newBlog.createdAt
+            createdAt: newBlog.createdAt,
+            isMembership: newBlog.isMembership
         }
         return createdBlog
     },

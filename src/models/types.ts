@@ -28,13 +28,15 @@ export type blogTypeOutput = {
     description: string,
     websiteUrl: string,
     createdAt: string
+    isMembership: boolean
 }
 export type blogType = {
     _id: string | ObjectId,
     name: string,
     description: string,
     websiteUrl: string,
-    createdAt: string
+    createdAt: string,
+    isMembership: boolean
 }
 
 export type userType = {
