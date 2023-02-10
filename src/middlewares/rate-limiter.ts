@@ -9,6 +9,4 @@ const rateLimiter = rateLimit({
     statusCode: 429
 });
 
-module.exports = {
-    rateLimiter
-};
+export { rateLimiter };
