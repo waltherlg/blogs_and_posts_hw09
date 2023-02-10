@@ -12,15 +12,14 @@ import {
     loginValidation, passwordValidation
 } from "../middlewares/input-validation-middleware/input-validation-middleware";
 import {authService} from "../domain/auth-service";
-import {tr} from "date-fns/locale";
-import {securityService} from "../domain/security-service";
-import jwt from "jsonwebtoken";
-import {ObjectId} from "mongodb";
+import rateLimit from "express-rate-limit";
+
 
 
 export const authRouter = Router({})
 
 authRouter.post('/registration',
+    rateLimit,
     loginValidation,
     passwordValidation,
     emailValidation,
@@ -39,6 +38,7 @@ authRouter.post('/registration',
     })
 
 authRouter.post('/registration-email-resending',
+    rateLimit,
     emailResendingValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -50,6 +50,7 @@ authRouter.post('/registration-email-resending',
     })
 
 authRouter.post('/registration-confirmation',
+    rateLimit,
     confirmationCodeValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -61,6 +62,7 @@ authRouter.post('/registration-confirmation',
     })
 
 authRouter.post('/login',
+    rateLimit,
     async (req: RequestWithBody<userAuthModel>, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {

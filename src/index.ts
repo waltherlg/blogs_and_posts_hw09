@@ -9,12 +9,13 @@ import {runDb} from "./repositories/db";
 import {authRouter} from "./routes/auth-route";
 import {commentsRouter} from "./routes/comments-route";
 import cookieParser from 'cookie-parser'
-import {authRateLimiter} from "./middlewares/rate-limiter";
 import {securityRouter} from "./routes/security-route";
 
 const bodyParser = require('body-parser');
 
+
 const app = express()
+app.set('trust proxy', true)
 const port = process.env.PORT || 3000
 
 
@@ -25,7 +26,7 @@ app.use('/testing', testingRouter)
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
-app.use('/auth', authRateLimiter(), authRouter)
+app.use('/auth', authRouter)
 app.use('/comments', commentsRouter)
 app.use('/security', securityRouter)
 
