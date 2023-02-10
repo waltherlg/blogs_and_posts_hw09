@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 import {authService} from "../domain/auth-service";
 import {jwtService} from "../application/jwt-service";
+import {securityService} from "../domain/security-service";
 
 
 export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -47,19 +48,25 @@ export const refreshTokenCheck = async (req: Request, res: Response, next: NextF
     }
     const userId = await jwtService.getUserIdFromRefreshToken(refreshToken)
     if (!userId) {
-        res.status(401).send("нет куки")
+        res.status(401).send("no user in cookies")
         return
     }
-    // const isTokenExpired = await authService.isTokenExpired(refreshToken)
-    // console.log(isTokenExpired)
-    // if (isTokenExpired) {
-    //     // res.sendStatus(401)
-    //     res.status(401).send("токен сдох")
-    //     return
-    // }
-
+    const deviceId = await jwtService.getDeviceIdFromRefreshToken(refreshToken)
+    if (!deviceId) {
+        res.status(401).send("no device in cookies")
+        return
+    }
     const user = await usersService.getUserById(userId)
-    if (!user) return res.status(401).send('no user')
+    if (!user) return res.status(401).send('user not found')
+
+    const currentDevise = await securityService.getCurrentDevise(userId, deviceId)
+    if (!currentDevise) return res.status(401).send('device not found')
+
+    let lastActiveRefreshToken = await jwtService.getLastActiveDateFromRefreshToken(refreshToken)
+    if (lastActiveRefreshToken !== currentDevise.lastActiveDate){
+        res.status(401).send("the last active dates do not match")
+        return
+    }
 
 
     req.user = user

@@ -11,7 +11,7 @@ export const userDeviceRepo = {
     },
 
     async getActiveUserDevices(userId: ObjectId){
-        const activeUserDevices = await userDeviceCollection.find({"userID": userId}).toArray()
+        const activeUserDevices = await userDeviceCollection.find({"userId": userId}).toArray()
 
         return  activeUserDevices.map((device) => ({
                 ip: device.ip,
@@ -22,17 +22,29 @@ export const userDeviceRepo = {
     },
 
     async deleteAllActiveUserDevices(userId: ObjectId): Promise<boolean>{
-        const result = await userDeviceCollection.deleteMany({"userID": userId})
+        const result = await userDeviceCollection.deleteMany({"userId": userId})
         return result.acknowledged
     },
 
-    async deleteUserDeviceById(userId: ObjectId, deviceId: string): Promise<boolean | null>{
+    async deleteUserDeviceById(userId: ObjectId, deviceId: string): Promise<boolean>{
         if (ObjectId.isValid(deviceId)){
             let _id = new ObjectId(deviceId)
-            const result = await userDeviceCollection.deleteOne({$and:[{"_id": _id},{"userID": userId}]})
+            const result = await userDeviceCollection.deleteOne({$and:[{"_id": _id},{"userId": userId}]})
             return result.deletedCount === 1
         }
         else return false
+    },
+
+    async getCurrentDevise(userId: ObjectId, deviceId: string){
+        if (ObjectId.isValid(userId) && ObjectId.isValid(deviceId)){
+            let _id = new ObjectId(deviceId)
+            let userIdObj = new ObjectId(userId)
+            const currentDevise = await userDeviceCollection.findOne({$and:[{"_id": _id},{"userId": userIdObj}]})
+            if (currentDevise){
+                return currentDevise
+            }
+            else return null
+        }
     }
 
     //async refreshDeviceInfo

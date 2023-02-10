@@ -97,13 +97,19 @@ export const authService = {
         const lastActiveDate = await jwtService.getLastActiveDateFromRefreshToken(refreshToken)
         const deviceInfo: userDeviceDBType = {
             _id: deviceId,
-            userID: user._id,
+            userId: user._id,
             ip,
             title: userAgent,
             lastActiveDate
         }
         await userDeviceRepo.addDeviceInfo(deviceInfo)
         return { accessToken, refreshToken }
+    },
+
+    async logout(userId: ObjectId, refreshToken: string){
+        const deviceId = await jwtService.getDeviceIdFromRefreshToken(refreshToken)
+        const isDeviceDeleted = await securityService.deleteUserDeviceById(userId, deviceId)
+        return isDeviceDeleted
     }
 }
 

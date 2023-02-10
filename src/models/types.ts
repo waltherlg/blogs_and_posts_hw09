@@ -75,7 +75,7 @@ export type commentTypeOutput = {
 
 export type userDeviceDBType = {
     _id: ObjectId,
-    userID: ObjectId,
+    userId: ObjectId,
     ip: string,
     title: string,
     lastActiveDate: string,

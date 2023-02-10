@@ -84,8 +84,9 @@ authRouter.get('/me',
 authRouter.post('/logout',
     refreshTokenCheck,
     async (req: Request, res: Response) => {
-        await jwtService.addTokenToRepo(req.user!._id, req.cookies!.refreshToken)
-        res.cookie("refreshToken", "", {httpOnly: true, secure: true}).sendStatus(204)
+        const isLogout = await authService.logout(req.user!._id, req.cookies!.refreshToken)
+        if (isLogout) res.cookie("refreshToken", "", {httpOnly: true, secure: true}).sendStatus(204)
+        else res.status(404).send("no logout")
     })
 
 authRouter.post('/refresh-token',
