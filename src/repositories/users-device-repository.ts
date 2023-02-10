@@ -45,6 +45,11 @@ export const userDeviceRepo = {
             }
             else return null
         }
+    },
+
+    async deleteAllDevices(): Promise<boolean>{
+        const result = await userDeviceCollection.deleteMany({})
+        return result.acknowledged
     }
 
     //async refreshDeviceInfo

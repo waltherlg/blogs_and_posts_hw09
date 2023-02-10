@@ -22,6 +22,10 @@ export const securityService = {
     async getCurrentDevise(userId: ObjectId, deviceId: string){
         let currentDevice = await userDeviceRepo.getCurrentDevise(userId, deviceId)
         return currentDevice
+    },
+
+    async deleteAllDevices(): Promise<boolean>{
+        return await userDeviceRepo.deleteAllDevices()
     }
 
 

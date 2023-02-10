@@ -58,6 +58,6 @@ export const commentsRepository = {
 
     async deleteAllComments(): Promise<boolean>{
         const result = await commentsCollection.deleteMany({})
-        return true
+        return result.acknowledged
     }
 }
