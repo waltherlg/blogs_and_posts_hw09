@@ -121,7 +121,7 @@ export const authService = {
         const lastActiveDate = await jwtService.getLastActiveDateFromRefreshToken(newRefreshedToken)
         const expirationDate = await jwtService.getExpirationDateFromRefreshToken(newRefreshedToken)
         await userDeviceRepo.refreshDeviceInfo(deviceId, lastActiveDate, expirationDate)
-        return { accessToken, newRefreshedToken}
+        return {accessToken, newRefreshedToken}
     }
 }
 
