@@ -10,6 +10,17 @@ export const userDeviceRepo = {
         return result.acknowledged
     },
 
+    async getDeviceById(deviceId: string){
+        if (ObjectId.isValid(deviceId)){
+            let _id = new ObjectId(deviceId)
+            const foundDevice = await userDeviceCollection.findOne({"_id": _id})
+            if (foundDevice){
+                return foundDevice
+            } else return null
+        }
+
+    },
+
     async getActiveUserDevices(userId: ObjectId){
         const activeUserDevices = await userDeviceCollection.find({"userId": userId}).toArray()
 

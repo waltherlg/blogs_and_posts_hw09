@@ -28,11 +28,15 @@ export const deviceService = {
     },
 
     async doesUserHaveThisDevice(userId: ObjectId, deviceId: string): Promise<boolean>{
-        let isDeviceExist = await userDeviceRepo.getDeviceByUsersAndDeviceId(userId, deviceId)
-        if (isDeviceExist){
+        let isDevice = await userDeviceRepo.getDeviceByUsersAndDeviceId(userId, deviceId)
+        if (isDevice){
             return true
         } else return false
+    },
 
+    async isDeviceExist(deviceId: string){
+      let isExist = await userDeviceRepo.getDeviceById(deviceId)
+        return !!isExist;
     },
 
     async deleteAllDevices(): Promise<boolean>{

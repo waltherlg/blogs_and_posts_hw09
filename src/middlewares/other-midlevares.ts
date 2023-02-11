@@ -21,7 +21,13 @@ export const isUserOwnerOfComments = async (req: Request, res: Response, next: N
 }
 
 export const isUserOwnerOfDevice = async (req: Request, res: Response, next: NextFunction) => {
-    const isOwner = await deviceService.doesUserHaveThisDevice(req.user!._id, req.params.deviceId)
+    const deviceId = req.params.deviceId
+    const isDeviseExist = await deviceService.isDeviceExist(deviceId)
+    if (!isDeviseExist){
+        res.status(404).send("device not found")
+        return
+    }
+    const isOwner = await deviceService.doesUserHaveThisDevice(req.user!._id, deviceId)
     if (!isOwner) {
         res.sendStatus(403)
         return
