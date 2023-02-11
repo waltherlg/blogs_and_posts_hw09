@@ -112,6 +112,16 @@ export const authService = {
         const deviceId = await jwtService.getDeviceIdFromRefreshToken(refreshToken)
         const isDeviceDeleted = await securityService.deleteUserDeviceById(userId, deviceId)
         return isDeviceDeleted
+    },
+
+    async refreshingToken(user: userType, refreshToken: string){
+        const deviceId = await jwtService.getDeviceIdFromRefreshToken(refreshToken)
+        const accessToken = await jwtService.createJWT(user)
+        const newRefreshedToken = await jwtService.createJWTRefresh(user, deviceId)
+        const lastActiveDate = await jwtService.getLastActiveDateFromRefreshToken(newRefreshedToken)
+        const expirationDate = await jwtService.getExpirationDateFromRefreshToken(newRefreshedToken)
+        await userDeviceRepo.refreshDeviceInfo(deviceId, lastActiveDate, expirationDate)
+        return { accessToken, newRefreshedToken}
     }
 }
 

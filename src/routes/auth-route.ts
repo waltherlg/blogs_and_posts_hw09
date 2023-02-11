@@ -71,6 +71,21 @@ authRouter.post('/login',
         } else res.sendStatus(401)
     })
 
+authRouter.post('/refresh-token',
+    refreshTokenCheck,
+    async (req: Request, res: Response) => {
+        const {accessToken, newRefreshedToken} = await authService.refreshingToken(req.user!, req.cookies!.refreshToken)
+        res.status(200).cookie("refreshToken", newRefreshedToken, {httpOnly: true, secure: true}).send({accessToken})
+    })
+
+// authRouter.post('/refresh-token',
+//     refreshTokenCheck,
+//     async (req: Request, res: Response) => {
+//         const newRefreshToken = await jwtService.updateJWTRefresh(req.user!._id, req.cookies!.refreshToken)
+//         const accessToken = await jwtService.createJWT(req.user!)
+//         res.status(200).cookie("refreshToken", newRefreshToken, {httpOnly: true, secure: true}).send({accessToken})
+//     })
+
 authRouter.get('/me',
     authMiddleware,
     async (req: Request, res: Response) => {
@@ -91,11 +106,3 @@ authRouter.post('/logout',
         else res.status(404).send("no logout")
     })
 
-authRouter.post('/refresh-token',
-    refreshTokenCheck,
-    async (req: Request, res: Response) => {
-        const newRefreshToken = await jwtService.updateJWTRefresh(req.user!._id, req.cookies!.refreshToken)
-        const accessToken = await jwtService.createJWT(req.user!)
-        res.status(200).cookie("refreshToken", newRefreshToken, {httpOnly: true, secure: true}).send({accessToken})
-    }
-)

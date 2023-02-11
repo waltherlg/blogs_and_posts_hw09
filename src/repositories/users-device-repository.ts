@@ -51,6 +51,20 @@ export const userDeviceRepo = {
         }
     },
 
+    async refreshDeviceInfo (deviceId: string, lastActiveDate: string, expirationDate: string): Promise<boolean>{
+        if (ObjectId.isValid(deviceId)) {
+            let _id = new ObjectId(deviceId)
+            const result = await userDeviceCollection.updateOne({"_id": _id},{
+                $set: {
+                    "lastActiveDate": lastActiveDate,
+                    "expirationDate": expirationDate
+                }
+            })
+            return result.matchedCount === 1
+        }
+        else return false
+    },
+
     async deleteAllDevices(): Promise<boolean>{
         const result = await userDeviceCollection.deleteMany({})
         return result.acknowledged
