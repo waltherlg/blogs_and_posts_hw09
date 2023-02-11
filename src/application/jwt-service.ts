@@ -6,12 +6,12 @@ import {expiredTokenRepository} from "../repositories/tokensRepository";
 
 export const jwtService = {
     async createJWT(user: userType) {
-        const token = jwt.sign({userId: user._id}, settings.JWT_SECRET, {expiresIn: '10s'})
+        const token = jwt.sign({userId: user._id}, settings.JWT_SECRET, {expiresIn: '10h'})
         return token
     },
 
     async createJWTRefresh(user: userType, deviceId: ObjectId)  {
-    const newRefreshedToken = jwt.sign({userId: user._id, deviceId}, settings.JWT_SECRET, {expiresIn: '20s'})
+    const newRefreshedToken = jwt.sign({userId: user._id, deviceId}, settings.JWT_SECRET, {expiresIn: '20h'})
     return newRefreshedToken
     },
 

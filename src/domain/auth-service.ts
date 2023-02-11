@@ -9,7 +9,7 @@ import {emailManager} from "../managers/email-manager";
 import {usersService} from "./users-service";
 import {confirmationCodeValidation} from "../middlewares/input-validation-middleware/input-validation-middleware";
 import {jwtService} from "../application/jwt-service";
-import {securityService} from "./security-service";
+import {deviceService} from "./device-service";
 import {userDeviceRepo} from "../repositories/users-device-repository";
 
 export const authService = {
@@ -108,9 +108,9 @@ export const authService = {
         return { accessToken, refreshToken }
     },
 
-    async logout(userId: ObjectId, refreshToken: string){
+    async logout(userId: ObjectId, refreshToken: string): Promise<boolean>{
         const deviceId = await jwtService.getDeviceIdFromRefreshToken(refreshToken)
-        const isDeviceDeleted = await securityService.deleteUserDeviceById(userId, deviceId)
+        const isDeviceDeleted = await deviceService.deleteUserDeviceById(userId, deviceId)
         return isDeviceDeleted
     },
 

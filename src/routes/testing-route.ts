@@ -5,7 +5,7 @@ import {usersRepository} from "../repositories/users-repository";
 import {usersService} from "../domain/users-service";
 import {authMiddleware} from "../middlewares/basic-auth.middleware";
 import {commentService} from "../domain/comment-service";
-import {securityService} from "../domain/security-service";
+import {deviceService} from "../domain/device-service";
 
 export const testingRouter = Router({})
 
@@ -16,7 +16,7 @@ testingRouter.delete('/all-data',
         const isBlogsDeleted = await blogsService.deleteAllBlogs();
         const isUsersDeleted = await usersService.deleteAllUsers();
         const isCommentsDeleted = await commentService.deleteAllComments();
-        const isUserDevicesDeleted = await securityService.deleteAllDevices();
+        const isUserDevicesDeleted = await deviceService.deleteAllDevices();
         if (isPostsDeleted && isBlogsDeleted && isUsersDeleted && isCommentsDeleted && isUserDevicesDeleted) {
             return res.sendStatus(204)
         } else {

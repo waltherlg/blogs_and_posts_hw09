@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
 import {commentService} from "../domain/comment-service";
 import {usersService} from "../domain/users-service";
+import {deviceService} from "../domain/device-service";
 
 
 export const isUserOwnerOfComments = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,3 +20,11 @@ export const isUserOwnerOfComments = async (req: Request, res: Response, next: N
     next()
 }
 
+export const isUserOwnerOfDevice = async (req: Request, res: Response, next: NextFunction) => {
+    const isOwner = await deviceService.doesUserHaveThisDevice(req.user!._id, req.params.deviceId)
+    if (!isOwner) {
+        res.sendStatus(403)
+        return
+    }
+    next()
+}

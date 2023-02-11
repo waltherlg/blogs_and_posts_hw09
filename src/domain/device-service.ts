@@ -2,8 +2,9 @@ import {ObjectId} from "mongodb";
 import {userDeviceRepo} from "../repositories/users-device-repository";
 import {userDeviceOutputType} from "../models/types";
 import {jwtService} from "../application/jwt-service";
+import {tr} from "date-fns/locale";
 
-export const securityService = {
+export const deviceService = {
 
     async getActiveUserDevices(userId: ObjectId){
         let foundDevices = await userDeviceRepo.getActiveUserDevices(userId)
@@ -16,17 +17,25 @@ export const securityService = {
         return isDevicesDeleted
     },
 
-    async deleteUserDeviceById(userId: ObjectId, deviceId: string){
+    async deleteUserDeviceById(userId: ObjectId, deviceId: string): Promise<boolean>{
         let isDeviceDeleted = await userDeviceRepo.deleteUserDeviceById(userId, deviceId)
         return isDeviceDeleted
     },
 
     async getCurrentDevise(userId: ObjectId, deviceId: string){
-        let currentDevice = await userDeviceRepo.getCurrentDevise(userId, deviceId)
+        let currentDevice = await userDeviceRepo.getDeviceByUsersAndDeviceId(userId, deviceId)
         return currentDevice
+    },
+
+    async doesUserHaveThisDevice(userId: ObjectId, deviceId: string): Promise<boolean>{
+        let isDeviceExist = await userDeviceRepo.getDeviceByUsersAndDeviceId(userId, deviceId)
+        if (isDeviceExist){
+            return true
+        } else return false
+
     },
 
     async deleteAllDevices(): Promise<boolean>{
         return await userDeviceRepo.deleteAllDevices()
-    }
+    },
 }

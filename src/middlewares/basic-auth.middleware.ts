@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 import {authService} from "../domain/auth-service";
 import {jwtService} from "../application/jwt-service";
-import {securityService} from "../domain/security-service";
+import {deviceService} from "../domain/device-service";
 
 
 export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -59,7 +59,7 @@ export const refreshTokenCheck = async (req: Request, res: Response, next: NextF
     const user = await usersService.getUserById(userId)
     if (!user) return res.status(401).send('user not found')
 
-    const currentDevise = await securityService.getCurrentDevise(userId, deviceId)
+    const currentDevise = await deviceService.getCurrentDevise(userId, deviceId)
     if (!currentDevise) return res.status(401).send('device not found')
 
     let lastActiveRefreshToken = await jwtService.getLastActiveDateFromRefreshToken(refreshToken)
