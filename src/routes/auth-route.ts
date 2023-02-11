@@ -13,13 +13,13 @@ import {
 } from "../middlewares/input-validation-middleware/input-validation-middleware";
 import {authService} from "../domain/auth-service";
 import rateLimit from "express-rate-limit";
-import {rateLimiter} from "../middlewares/rate-limiter";
+import {authRateLimiter} from "../middlewares/auth-rate-limiter";
 
 
 export const authRouter = Router({})
 
 authRouter.post('/registration',
-    rateLimiter,
+    authRateLimiter.registration,
     loginValidation,
     passwordValidation,
     emailValidation,
@@ -38,7 +38,7 @@ authRouter.post('/registration',
     })
 
 authRouter.post('/registration-email-resending',
-    rateLimiter,
+    authRateLimiter.emailResending,
     emailResendingValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -50,7 +50,7 @@ authRouter.post('/registration-email-resending',
     })
 
 authRouter.post('/registration-confirmation',
-    rateLimiter,
+    authRateLimiter.registrationConfirmation,
     confirmationCodeValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -62,7 +62,7 @@ authRouter.post('/registration-confirmation',
     })
 
 authRouter.post('/login',
-    rateLimiter,
+    authRateLimiter.login,
     async (req: RequestWithBody<userAuthModel>, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (user) {
